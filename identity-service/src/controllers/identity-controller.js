@@ -54,4 +54,8 @@ const registerUser = async (req, res, next) => {
 
 //user-login
 //refresh-token
-//logoutß
+//logout
+
+module.exports = {
+    registerUser
+}
