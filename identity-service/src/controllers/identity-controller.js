@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const { generateTokens } = require('../utils/generateToken')
 const logger = require('../utils/Logger')
 const {validateRegistration} = require('../utils/validation')
 
@@ -31,17 +32,22 @@ const registerUser = async (req, res, next) => {
         }
         user = new User({username, email, password})
         await user.save()
-        res.status(201).json({
+        logger.warn("New user registered: %s", user._id)
+        const { accessToken, refreshToken } = await generateTokens(user)
+        return res.status(201).json({
             success: true,
             message: "User registered successfully",
-            user: {
-                id: user._id,
-                username: user.username,
-                email: user.email
+            data: {
+                accessToken,
+                refreshToken
             }
         })
     } catch (error) {
-         
+         logger.error("Error during user registration: %s", error.message)
+         return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+         })
     }
 
 }
