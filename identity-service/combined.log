@@ -21,3 +21,7 @@
 {"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-11-18T18:20:03.136Z"}
 {"level":"info","message":"Hit registerUser endpoint","service":"identity-service","timestamp":"2025-11-18T18:20:03.137Z"}
 {"level":"warn","message":"New user registered: 691cb8d31ef84125557c1de6","service":"identity-service","timestamp":"2025-11-18T18:20:03.280Z"}
+{"level":"info","message":"Identity Service running on port 3001","service":"identity-service","timestamp":"2025-11-20T21:08:18.242Z"}
+{"level":"error","message":"Failed to connect to MongoDB: Invalid scheme, expected connection string to start with \"mongodb://\" or \"mongodb+srv://\"","service":"identity-service","timestamp":"2025-11-20T21:08:18.243Z"}
+{"level":"info","message":"Identity Service running on port 3001","service":"identity-service","timestamp":"2025-11-20T21:09:10.219Z"}
+{"level":"info","message":"Connected to MongoDB","service":"identity-service","timestamp":"2025-11-20T21:09:11.761Z"}
