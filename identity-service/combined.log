@@ -11,3 +11,13 @@
 {"level":"info","message":"Connected to MongoDB","service":"identity-service","timestamp":"2025-11-18T15:29:02.193Z"}
 {"level":"info","message":"Identity Service running on port 3001","service":"identity-service","timestamp":"2025-11-18T15:32:45.935Z"}
 {"level":"info","message":"Connected to MongoDB","service":"identity-service","timestamp":"2025-11-18T15:32:46.964Z"}
+{"level":"info","message":"Identity Service running on port 3001","service":"identity-service","timestamp":"2025-11-18T18:16:13.647Z"}
+{"level":"info","message":"Connected to MongoDB","service":"identity-service","timestamp":"2025-11-18T18:16:14.202Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/register","service":"identity-service","timestamp":"2025-11-18T18:19:49.190Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-11-18T18:19:49.190Z"}
+{"level":"info","message":"Hit registerUser endpoint","service":"identity-service","timestamp":"2025-11-18T18:19:49.193Z"}
+{"level":"warn","message":"Validation failed during user registration: \"password\" length must be at least 8 characters long","service":"identity-service","timestamp":"2025-11-18T18:19:49.196Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/register","service":"identity-service","timestamp":"2025-11-18T18:20:03.135Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-11-18T18:20:03.136Z"}
+{"level":"info","message":"Hit registerUser endpoint","service":"identity-service","timestamp":"2025-11-18T18:20:03.137Z"}
+{"level":"warn","message":"New user registered: 691cb8d31ef84125557c1de6","service":"identity-service","timestamp":"2025-11-18T18:20:03.280Z"}
