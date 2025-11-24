@@ -1,15 +1,17 @@
 const express = require('express')
 const cors = require('cors')
 require('dotenv').config()
+const Redis = require('ioredis')
 const logger = require('./utils/logger')
 const helmet = require('helmet')
 const {rateLimit} = require('express-rate-limit') 
 const {RedisStore} = require('rate-limit-redis')
 const proxy = require('express-http-proxy')
+const errorHandler = require('./middleware/errorHandler')
 
 const app = express()
 const PORT = process.env.PORT || 3000
-
+const redisClient = new Redis(process.env.REDIS_URL)
 // Middleware
 app.use(helmet())
 app.use(cors())
@@ -68,3 +70,8 @@ app.use('/v1/auth', proxy(process.env.IDENTITY_SERVICE_URL, {
         return proxyResData
     }       
 }))
+//using the error handling middleware
+app.use(errorHandler)
+app.listen(PORT, ()=>{
+    logger.info(`API Gateway is running on port ${PORT}`)
+})
