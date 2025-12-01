@@ -2,7 +2,7 @@ const User = require('../models/User')
 const { generateTokens } = require('../utils/generateToken')
 const logger = require('../utils/Logger')
 const {validateRegistration} = require('../utils/validation')
-
+const {validateLogin} = require('../utils/validation')
 
 //user-registeration
 
@@ -53,6 +53,58 @@ const registerUser = async (req, res, next) => {
 }
 
 //user-login
+const loginUser = async (req, res, next) => {
+    logger.info("Hit loginUser endpoint")
+    try{
+        const {error} = validateLogin(req.body)
+        if (error){
+            logger.warn("Validation failed during user login: %s", error.details[0].message)
+            return res.status(400).json({
+                success: false,
+                message: "Validation failed",
+                errors: error.details.map(err => ({
+                    field: err.context.key,
+                    message: err.message
+                }))
+            })
+        }
+         const {email, password} = req.body
+         const user = await User.findOne({email})
+         if (!user){
+            logger.warn("Login attempt with unregistered email: %s", email)
+            return res.status(401).json({
+                success: false,
+                message: "The email does not exist."
+            })
+         }
+         //check for password match
+        const isMatch = await user.comparePassword(password)
+        if (!isMatch){
+            logger.warn("Invalid password attempt for email: %s", email)
+            return res.status(401).json({
+                success: false,
+                message: "Invalid password."
+            })
+        }
+        //if the password matches
+        const {accessToken, refreshToken} = await generateTokens(user)
+        return res.status(200).json({
+            success: true,
+            message: "Login successful",
+            data: {
+                accessToken,
+                refreshToken
+            }
+        })
+
+    }catch(error){
+        logger.error("Error during user login: %s", error.message)
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
 //refresh-token
 //logout
 

@@ -25,3 +25,13 @@
 {"level":"error","message":"Failed to connect to MongoDB: Invalid scheme, expected connection string to start with \"mongodb://\" or \"mongodb+srv://\"","service":"identity-service","timestamp":"2025-11-20T21:08:18.243Z"}
 {"level":"info","message":"Identity Service running on port 3001","service":"identity-service","timestamp":"2025-11-20T21:09:10.219Z"}
 {"level":"info","message":"Connected to MongoDB","service":"identity-service","timestamp":"2025-11-20T21:09:11.761Z"}
+{"level":"info","message":"Identity Service running on port 3001","service":"identity-service","timestamp":"2025-11-25T01:16:59.017Z"}
+{"level":"info","message":"Connected to MongoDB","service":"identity-service","timestamp":"2025-11-25T01:16:59.402Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/register","service":"identity-service","timestamp":"2025-11-25T01:17:06.904Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-11-25T01:17:06.904Z"}
+{"level":"info","message":"Hit registerUser endpoint","service":"identity-service","timestamp":"2025-11-25T01:17:06.908Z"}
+{"level":"warn","message":"Validation failed during user registration: \"password\" length must be at least 8 characters long","service":"identity-service","timestamp":"2025-11-25T01:17:06.912Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/register","service":"identity-service","timestamp":"2025-11-25T01:17:15.883Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-11-25T01:17:15.883Z"}
+{"level":"info","message":"Hit registerUser endpoint","service":"identity-service","timestamp":"2025-11-25T01:17:15.885Z"}
+{"level":"warn","message":"New user registered: 6925039bf12d29a7b2a5fcf6","service":"identity-service","timestamp":"2025-11-25T01:17:16.024Z"}
