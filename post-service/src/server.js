@@ -118,4 +118,7 @@ app.listen(PORT, () => {
     logger.info(`Redis: ${process.env.REDIS_URL || 'unset'}`)
 })
 
-
+//unhandled promise rejection
+process.on('unhandledRejection', (reason, promise)=>{
+    logger.error('Unhandled Rejection at: %s, reason: %s', promise, reason)
+})
