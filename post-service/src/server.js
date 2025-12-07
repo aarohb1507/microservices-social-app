@@ -7,10 +7,14 @@ require('dotenv').config()
 const errorHandler = require('./middleware/errorHandler')
 const postRoutes = require('./routes/post-routes')
 const {globalRateLimiter} = require('./middleware/rateLimiters')
+const Redis = require('ioredis')
 
 // Initialize express app
 const app = express()
 const PORT = process.env.PORT || 3002
+
+// Redis client
+const redisClient = new Redis(process.env.REDIS_URL)
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI).then(()=>{
@@ -36,6 +40,12 @@ app.use(globalRateLimiter)
 
 // Apply post routes
 app.use('/api/posts', postRoutes)
+
+//redis client
+app.use('/api/posts',(req, res, next)=>{
+    req.redisClient = redisClient
+    next()
+})
 
 // Error handler
 app.use(errorHandler)

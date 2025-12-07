@@ -43,7 +43,35 @@ const createPost = async (req, res, next) => {
 const getAllPosts = async (req, res, next) => {
     logger.info("Hit getPosts endpoint");
     try {
-        
+        const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const startIndex = (page - 1) * limit;
+
+    const cacheKey = `posts:${page}:${limit}`;
+    const cachedPosts = await req.redisClient.get(cacheKey);
+
+    if (cachedPosts) {
+      return res.json(JSON.parse(cachedPosts));
+    }
+
+    const posts = await Post.find({})
+      .sort({ createdAt: -1 })
+      .skip(startIndex)
+      .limit(limit);
+
+    const totalNoOfPosts = await Post.countDocuments();
+
+    const result = {
+      posts,
+      currentpage: page,
+      totalPages: Math.ceil(totalNoOfPosts / limit),
+      totalPosts: totalNoOfPosts,
+    };
+
+    //save your posts in redis cache
+    await req.redisClient.setex(cacheKey, 300, JSON.stringify(result));
+
+    res.json(result);
     } catch (error) {
         logger.error("Error in getPosts: %s", error.message);
         return res.status(500).json({
