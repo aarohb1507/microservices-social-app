@@ -12,7 +12,7 @@ const authenticateUser = (req, res, next) => {
         });
     }
     // In a real application, verify the user ID and fetch user details
-    req.user = { userId }; // Mock user object
+    req.user = { id:userId }; // Mock user object
     next();
 }
 module.exports = {

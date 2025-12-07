@@ -8,7 +8,7 @@ const { rateLimit } = require('express-rate-limit')
 const { RedisStore } = require('rate-limit-redis')
 const proxy = require('express-http-proxy')
 const errorHandler = require('./middleware/errorHandler')
-
+const { authenticateUser, validateToken } = require('./middleware/authMiddleware')
 const app = express()
 const PORT = process.env.PORT || 3000
 const redisClient = new Redis(process.env.REDIS_URL)
@@ -34,7 +34,7 @@ const rateLimiterMiddleware = rateLimit({
     legacyHeaders: false,
     handler: (req, res) => {
         logger.warn('IP %s exceeded rate limit on sensitive endpoint', req.ip)
-        res.status(429).json({
+       return res.status(429).json({
             success: false,
             message: 'Too Many Requests on sensitive endpoint'
         })
@@ -50,7 +50,7 @@ const proxyOptions = {
     proxyReqPathResolver: (req) => req.originalUrl.replace(/^\/v1/, '/api'),
     proxyErrorHandler: (err, res) => {
         logger.error('Error while proxying request: %o', err)
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: 'An error occurred while processing your request',
             error: err?.message || String(err)
@@ -79,11 +79,11 @@ if (!process.env.IDENTITY_SERVICE_URL) {
 if (!process.env.POST_SERVICE_URL) {
     logger.warn('POST_SERVICE_URL not set — skipping /v1/posts proxy mount')
 } else {
-    app.use('/v1/posts', proxy(process.env.POST_SERVICE_URL, {
+    app.use('/v1/posts', validateToken, proxy(process.env.POST_SERVICE_URL, {
         ...proxyOptions,
         proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
             proxyReqOpts.headers['content-type'] = 'application/json'
-            proxyReqOpts.headers['x-user-id'] = srcReq.user.userId || ''
+            proxyReqOpts.headers['x-user-id'] = srcReq.user?.id || srcReq.user?._id || ''
             return proxyReqOpts 
         },
         userResDecorator: (proxyRes, proxyResData, userReq) => {

@@ -1,7 +1,8 @@
 const logger = require('../utils/logger')
 const jwt = require('jsonwebtoken')
+
 const validateToken = (req, res, next) => {
-    
+
     const authHeader = req.headers['authorization']
     if (!authHeader) {
         logger.warn('No Authorization header present')

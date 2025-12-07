@@ -1,18 +1,14 @@
-//write the imports
 const express = require('express')
 const helmet = require('helmet')
 const mongoose = require('mongoose')
 const logger = require('./utils/logger')
 const cors = require('cors')
 require('dotenv').config()
-const Redis = require('ioredis')
-const rateLimit = require('express-rate-limit')
-const RedisStoreModule = require('rate-limit-redis')
-const RedisStore = RedisStoreModule.default || RedisStoreModule
 const errorHandler = require('./middleware/errorHandler')
 const postRoutes = require('./routes/post-routes')
+const {globalRateLimiter} = require('./middleware/rateLimiters')
 
-//initialize express app
+// Initialize express app
 const app = express()
 const PORT = process.env.PORT || 3002
 
@@ -23,9 +19,6 @@ mongoose.connect(process.env.MONGODB_URI).then(()=>{
 .catch((err)=>{
     logger.error('Failed to connect to MongoDB: %s', err.message)
 })
-
-// Redis client
-const redisClient = new Redis(process.env.REDIS_URL)
 
 // Middleware setup
 app.use(helmet())
@@ -38,77 +31,11 @@ app.use((req, res, next)=>{
     next()
 })
 
-// Global rate limiter (all endpoints)
-const globalRateLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // 100 requests per 15 min
-    standardHeaders: true,
-    legacyHeaders: false,
-    handler: (req, res) => {
-        logger.warn('IP %s exceeded global rate limit', req.ip)
-        res.status(429).json({
-            success: false,
-            message: 'Too many requests. Please try again later.'
-        })
-    },
-    store: new RedisStore({
-        sendCommand: (...args) => redisClient.call(...args),
-    }),
-})
-
-// Stricter rate limiter for createPost (prevent spam posts)
-const createPostLimiter = rateLimit({
-    windowMs: 60 * 1000, // 1 minute
-    max: 5, // max 5 posts per minute
-    standardHeaders: true,
-    legacyHeaders: false,
-    handler: (req, res) => {
-        logger.warn('IP %s exceeded createPost rate limit', req.ip)
-        res.status(429).json({
-            success: false,
-            message: 'Too many posts created. Wait before posting again.'
-        })
-    },
-    store: new RedisStore({
-        sendCommand: (...args) => redisClient.call(...args),
-    }),
-})
-
-// Moderate rate limiter for deletePost (prevent deletion spam)
-const deletePostLimiter = rateLimit({
-    windowMs: 10 * 60 * 1000, // 10 minutes
-    max: 20, // max 20 deletes per 10 min
-    standardHeaders: true,
-    legacyHeaders: false,
-    handler: (req, res) => {
-        logger.warn('IP %s exceeded deletePost rate limit', req.ip)
-        res.status(429).json({
-            success: false,
-            message: 'Too many deletions. Wait before deleting again.'
-        })
-    },
-    store: new RedisStore({
-        sendCommand: (...args) => redisClient.call(...args),
-    }),
-})
-
-// Apply global limiter to all routes
+// Apply global rate limiter to all routes
 app.use(globalRateLimiter)
 
-// Apply specific limiters to post routes
-
-
-// Routes
-app.use('/api/posts',(req, res, next) => {
-    if (req.method === 'POST') {
-        createPostLimiter(req, res, next)
-    } else if (req.method === 'DELETE') {
-        deletePostLimiter(req, res, next)
-    }
-    next();
-}, postRoutes)
-
-
+// Apply post routes
+app.use('/api/posts', postRoutes)
 
 // Error handler
 app.use(errorHandler)
@@ -120,7 +47,7 @@ app.listen(PORT, () => {
     logger.info(`Redis: ${process.env.REDIS_URL || 'unset'}`)
 })
 
-//unhandled promise rejection
+// Unhandled promise rejection
 process.on('unhandledRejection', (reason, promise)=>{
     logger.error('Unhandled Rejection at: %s, reason: %s', promise, reason)
 })

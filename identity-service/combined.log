@@ -44,3 +44,53 @@
 {"level":"info","message":"Recieved POST request for /api/auth/login","service":"identity-service","timestamp":"2025-12-06T15:36:49.179Z"}
 {"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-12-06T15:36:49.180Z"}
 {"level":"info","message":"Hit loginUser endpoint","service":"identity-service","timestamp":"2025-12-06T15:36:49.181Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/login","service":"identity-service","timestamp":"2025-12-06T16:04:32.740Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-12-06T16:04:32.740Z"}
+{"level":"info","message":"Hit loginUser endpoint","service":"identity-service","timestamp":"2025-12-06T16:04:32.741Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/register","service":"identity-service","timestamp":"2025-12-06T16:05:10.516Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-12-06T16:05:10.516Z"}
+{"level":"info","message":"Hit registerUser endpoint","service":"identity-service","timestamp":"2025-12-06T16:05:10.517Z"}
+{"level":"warn","message":"Registration attempt with existing email or username: aarohb.1507@gmail.com, aaroh","service":"identity-service","timestamp":"2025-12-06T16:05:10.548Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/register","service":"identity-service","timestamp":"2025-12-06T16:05:19.058Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-12-06T16:05:19.058Z"}
+{"level":"info","message":"Hit registerUser endpoint","service":"identity-service","timestamp":"2025-12-06T16:05:19.060Z"}
+{"level":"warn","message":"Registration attempt with existing email or username: aarohb.1507@gmail.com, aarohb","service":"identity-service","timestamp":"2025-12-06T16:05:19.293Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/register","service":"identity-service","timestamp":"2025-12-06T16:05:37.929Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-12-06T16:05:37.929Z"}
+{"level":"info","message":"Hit registerUser endpoint","service":"identity-service","timestamp":"2025-12-06T16:05:37.933Z"}
+{"level":"warn","message":"New user registered: 693454514ba0981b3f6df431","service":"identity-service","timestamp":"2025-12-06T16:05:38.049Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/login","service":"identity-service","timestamp":"2025-12-06T16:06:00.412Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-12-06T16:06:00.412Z"}
+{"level":"info","message":"Hit loginUser endpoint","service":"identity-service","timestamp":"2025-12-06T16:06:00.413Z"}
+{"level":"warn","message":"Login attempt with unregistered email: aaroh.1497@gmail.com","service":"identity-service","timestamp":"2025-12-06T16:06:00.441Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/login","service":"identity-service","timestamp":"2025-12-06T16:06:05.664Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-12-06T16:06:05.664Z"}
+{"level":"info","message":"Hit loginUser endpoint","service":"identity-service","timestamp":"2025-12-06T16:06:05.665Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/login","service":"identity-service","timestamp":"2025-12-06T19:07:50.236Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-12-06T19:07:50.237Z"}
+{"level":"info","message":"Hit loginUser endpoint","service":"identity-service","timestamp":"2025-12-06T19:07:50.238Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/login","service":"identity-service","timestamp":"2025-12-06T19:49:03.803Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-12-06T19:49:03.804Z"}
+{"level":"info","message":"Hit loginUser endpoint","service":"identity-service","timestamp":"2025-12-06T19:49:03.806Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/login","service":"identity-service","timestamp":"2025-12-06T20:03:21.198Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-12-06T20:03:21.198Z"}
+{"level":"info","message":"Hit loginUser endpoint","service":"identity-service","timestamp":"2025-12-06T20:03:21.198Z"}
+{"level":"info","message":"Identity Service running on port 3001","service":"identity-service","timestamp":"2025-12-07T11:19:24.574Z"}
+{"level":"info","message":"Connected to MongoDB","service":"identity-service","timestamp":"2025-12-07T11:19:24.922Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/login","service":"identity-service","timestamp":"2025-12-07T11:19:57.053Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-12-07T11:19:57.053Z"}
+{"level":"info","message":"Hit loginUser endpoint","service":"identity-service","timestamp":"2025-12-07T11:19:57.055Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/login","service":"identity-service","timestamp":"2025-12-07T11:21:34.241Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-12-07T11:21:34.241Z"}
+{"level":"info","message":"Hit loginUser endpoint","service":"identity-service","timestamp":"2025-12-07T11:21:34.242Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/login","service":"identity-service","timestamp":"2025-12-07T11:35:19.070Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-12-07T11:35:19.070Z"}
+{"level":"info","message":"Hit loginUser endpoint","service":"identity-service","timestamp":"2025-12-07T11:35:19.072Z"}
+{"level":"info","message":"Identity Service running on port 3001","service":"identity-service","timestamp":"2025-12-07T11:35:42.234Z"}
+{"level":"info","message":"Connected to MongoDB","service":"identity-service","timestamp":"2025-12-07T11:35:42.578Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/login","service":"identity-service","timestamp":"2025-12-07T11:35:57.948Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-12-07T11:35:57.948Z"}
+{"level":"info","message":"Hit loginUser endpoint","service":"identity-service","timestamp":"2025-12-07T11:35:57.950Z"}
+{"level":"info","message":"Recieved POST request for /api/auth/login","service":"identity-service","timestamp":"2025-12-07T12:34:43.630Z"}
+{"level":"info","message":"request body is [object Object]","service":"identity-service","timestamp":"2025-12-07T12:34:43.631Z"}
+{"level":"info","message":"Hit loginUser endpoint","service":"identity-service","timestamp":"2025-12-07T12:34:43.633Z"}
