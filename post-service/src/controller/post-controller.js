@@ -2,6 +2,16 @@ const logger = require('../utils/logger');
 const Post = require('../models/Post');
 const {validatePost} = require('../utils/validation');
 
+
+const invalidatePost = async (req, input) => {
+    const cachedKey = `post:${input}`;
+  await req.redisClient.del(cachedKey);
+
+  const keys = await req.redisClient.keys("posts:*");
+  if (keys.length > 0) {
+    await req.redisClient.del(keys);
+  }   
+}
 // Create a new post
 const createPost = async (req, res, next) => {
     logger.info("Hit createPost endpoint");
@@ -25,7 +35,8 @@ const createPost = async (req, res, next) => {
             mediaId: mediaId || ''
         });
         await post.save();
-        logger.info("Post created with ID: %s", post._id);
+        await invalidatePost(req, 'posts:*')
+        logger.info("Post created with ID: %s", post._id)
         return res.status(201).json({
             success: true,
             data: post
@@ -43,7 +54,7 @@ const createPost = async (req, res, next) => {
 const getAllPosts = async (req, res, next) => {
     logger.info("Hit getPosts endpoint");
     try {
-        const page = parseInt(req.query.page) || 1;
+    const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const startIndex = (page - 1) * limit;
 
@@ -84,7 +95,30 @@ const getAllPosts = async (req, res, next) => {
 const getPost = async (req, res, next) => {
     logger.info("Hit getPost endpoint");
     try {
-        
+        const postId = req.params.id;
+    const cachekey = `post:${postId}`;
+    const cachedPost = await req.redisClient.get(cachekey);
+
+    if (cachedPost) {
+      return res.json(JSON.parse(cachedPost));
+    }
+
+    const singlePostDetailsbyId = await Post.findById(postId);
+
+    if (!singlePostDetailsbyId) {
+      return res.status(404).json({
+        message: "Post not found",
+        success: false,
+      });
+    }
+
+    await req.redisClient.setex(
+      cachedPost,
+      3600,
+      JSON.stringify(singlePostDetailsbyId)
+    );
+
+    res.json(singlePostDetailsbyId);
     } catch (error) {
         logger.error("Error in getPost: %s", error.message);
         return res.status(500).json({
@@ -97,7 +131,22 @@ const getPost = async (req, res, next) => {
 const deletePost = async (req, res, next) => {
     logger.info("Hit deletePost endpoint");
     try {
-        
+        const post = await Post.findOneAndDelete({
+      _id: req.params.id,
+      user: req.user.id,
+    });
+
+    if (!post) {
+      return res.status(404).json({
+        message: "Post not found",
+        success: false,
+      });
+    }
+    await invalidatePost(req, req.params.id);
+    return res.status(200).json({
+        success: true,
+        message: "Post deleted successfully"
+    });
     } catch (error) {
         logger.error("Error in deletePost: %s", error.message);
         return res.status(500).json({

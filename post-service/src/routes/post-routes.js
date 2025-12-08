@@ -6,8 +6,8 @@ const {createPostLimiter, deletePostLimiter} = require('../middleware/rateLimite
 
 // Rate limiter BEFORE auth
 router.post('/create-post', createPostLimiter, authenticateUser, createPost)
-router.get('/all-posts', getAllPosts)
-router.get('/:id', getPost)
+router.get('/all-posts', getAllPosts, authenticateUser)
+router.get('/:id', getPost, authenticateUser)
 router.delete('/delete-post', deletePostLimiter, authenticateUser, deletePost)
 
 module.exports = router;
