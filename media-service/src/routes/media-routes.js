@@ -51,6 +51,6 @@ router.post(
   uploadMedia
 );
 
-router.get("/get",getMediaLimiter, authenticateUser, getAllMedias);
+router.get("/get",getMediaLimiter, authenticateUser, getUserMedia);
 
 module.exports = router;
