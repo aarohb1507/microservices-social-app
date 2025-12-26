@@ -36,17 +36,17 @@ app.use((req, res, next)=>{
     next()
 })
 
-// Apply global rate limiter to all routes
+// Attach Redis client to requests
+app.use((req, res, next)=>{
+    req.redisClient = redisClient
+    next()
+})
+
+// Apply global rate limiter to all routes (except those with specific limiters)
 app.use(globalRateLimiter)
 
 // Apply post routes
 app.use('/api/posts', postRoutes)
-
-//redis client
-app.use('/api/posts',(req, res, next)=>{
-    req.redisClient = redisClient
-    next()
-})
 
 // Error handler
 app.use(errorHandler)
@@ -56,6 +56,8 @@ async function startServer() {
     await connectToRabbitMQ();
     app.listen(PORT, () => {
       logger.info(`Post service running on port ${PORT}`);
+      logger.info(`MongoDB: ${process.env.MONGODB_URI || 'unset'}`);
+      logger.info(`Redis: ${process.env.REDIS_URL || 'unset'}`);
     });
   } catch (error) {
     logger.error("Failed to connect to server", error);
@@ -63,13 +65,6 @@ async function startServer() {
   }
 }
 startServer();
-
-// Start server
-app.listen(PORT, () => {
-    logger.info(`Post Service running on port ${PORT}`)
-    logger.info(`MongoDB: ${process.env.MONGODB_URI || 'unset'}`)
-    logger.info(`Redis: ${process.env.REDIS_URL || 'unset'}`)
-})
 
 // Unhandled promise rejection
 process.on('unhandledRejection', (reason, promise)=>{

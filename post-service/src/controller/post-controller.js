@@ -1,7 +1,7 @@
 const logger = require('../utils/logger');
 const Post = require('../models/Post');
 const {validatePost} = require('../utils/validation');
-
+const { publishEvent } = require('../utils/rabbitmq');
 
 const invalidatePost = async (req, input) => {
     const cachedKey = `post:${input}`;

@@ -11,6 +11,10 @@ const globalRateLimiter = rateLimit({
     max: 100,
     standardHeaders: true,
     legacyHeaders: false,
+    skip: (req, res) => {
+        // Skip routes that have their own specific limiters
+        return req.path.includes('create-post') || req.method === 'DELETE';
+    },
     handler: (req, res) => {
         logger.warn('IP %s exceeded global rate limit', req.ip)
         return res.status(429).json({
@@ -25,7 +29,7 @@ const globalRateLimiter = rateLimit({
 
 const createPostLimiter = rateLimit({
     windowMs: 60 * 1000,
-    max: 5,
+    max: 20,
     standardHeaders: true,
     legacyHeaders: false,
     handler: (req, res) => {

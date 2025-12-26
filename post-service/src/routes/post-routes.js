@@ -8,6 +8,6 @@ const {createPostLimiter, deletePostLimiter} = require('../middleware/rateLimite
 router.post('/create-post', createPostLimiter, authenticateUser, createPost)
 router.get('/all-posts', getAllPosts, authenticateUser)
 router.get('/:id', getPost, authenticateUser)
-router.delete('/:id', deletePostLimiter, authenticateUser, deletePost)
+router.delete('/delete/:id', deletePostLimiter, authenticateUser, deletePost)
 
 module.exports = router;
