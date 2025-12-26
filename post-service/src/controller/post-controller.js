@@ -35,6 +35,14 @@ const createPost = async (req, res, next) => {
             mediaIds: mediaIds || []
         });
         await post.save();
+
+        await publishEvent("post.created", {
+        postId: post._id.toString(),
+        userId: post.user.toString(),
+        content: post.content,
+        createdAt: post.createdAt,
+        });
+
         await invalidatePost(req, 'posts:*')
         logger.info("Post created with ID: %s", post._id)
         return res.status(201).json({
@@ -142,7 +150,7 @@ const deletePost = async (req, res, next) => {
         success: false,
       });
     }
-    
+
     await invalidatePost(req, req.params.id);
     return res.status(200).json({
         success: true,
