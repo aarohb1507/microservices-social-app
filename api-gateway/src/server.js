@@ -115,6 +115,25 @@ if (!process.env.MEDIA_SERVICE_URL) {
     })
     )
 }
+
+//mount /v1/search proxy only if search service URL is set
+if (!process.env.SEARCH_SERVICE_URL) {
+    logger.warn('SEARCH_SERVICE_URL not set — skipping /v1/search proxy mount')
+}else{
+    app.use('/v1/search', validateToken, proxy(process.env.SEARCH_SERVICE_URL, {   
+        ...proxyOptions,
+        proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
+            proxyReqOpts.headers['content-type'] = 'application/json'
+            proxyReqOpts.headers['x-user-id'] = srcReq.user?.id || srcReq.user?._id || ''
+            return proxyReqOpts 
+        },
+        userResDecorator: (proxyRes, proxyResData, userReq) => {
+            logger.info('Search-service responded %d for %s', proxyRes.statusCode, userReq.originalUrl)
+            return proxyResData
+        }})
+    ) 
+}
+
 // Global error handler
 app.use(errorHandler)
 
@@ -125,4 +144,5 @@ app.listen(PORT, () => {
     logger.info(`Post service is running on ${process.env.POST_SERVICE_URL || 'unset'}`)
     logger.info(`Redis is running on ${process.env.REDIS_URL || 'unset'}`)
     logger.info(`Media service is running on ${process.env.MEDIA_SERVICE_URL || 'unset'}`)
+    logger.info(`Search service is running on ${process.env.SEARCH_SERVICE_URL || 'unset'}`)
 })

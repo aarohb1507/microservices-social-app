@@ -9,6 +9,8 @@ const logger = require("./utils/logger");
 const { connectToRabbitMQ, consumeEvent } = require("./utils/rabbitmq");
 const searchRoutes = require("./routes/search-routes");
 const {handlePostCreated, handlePostDeleted} = require("./eventHandler/search-event-handler");
+const RedisStore = require("rate-limit-redis").default;
+const { rateLimit } = require("express-rate-limit");
 
 const app = express();
 const PORT = process.env.PORT || 3004;
@@ -32,10 +34,49 @@ app.use((req, res, next) => {
   next();
 });
 
-//*** Homework - implement Ip based rate limiting for sensitive endpoints
+//global rate limiter
+const globalRateLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        logger.warn('IP %s exceeded global rate limit', req.ip)
+        return res.status(429).json({
+            success: false,
+            message: 'Too many requests. Please try again later.'
+        })
+    },
+    store: new RedisStore({
+        sendCommand: (...args) => redisClient.call(...args),
+    }),
+})
+//use the global rate limiter
+app.use(globalRateLimiter);
+
+//rate limiter for search endpoint
+const searchRateLimiter = rateLimit({
+    windowMs: 1 * 60 * 1000,
+    max: 30,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        logger.warn('IP %s exceeded search rate limit', req.ip)
+        return res.status(429).json({
+            success: false,
+            message: 'Too many search requests. Please try again later.'
+        })
+    },
+    store: new RedisStore({
+        sendCommand: (...args) => redisClient.call(...args),
+    }),
+})
+app.use("/api/search", searchRateLimiter,(req, res, next)=>{
+    req.redisClient = redisClient
+    next()
+}, searchRoutes);
 
 //*** Homework - pass redis client as part of your req and then implement redis caching
-app.use("/api/search", searchRoutes);
 
 app.use(errorHandler);
 
